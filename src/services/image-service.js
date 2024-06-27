@@ -9,21 +9,23 @@ const imageTracker = (image) => {
             reject(new Error('no image provided'))
         }else{
             const data = {
-                inlineData: image
+                inlineData: {
+                    data: image,
+                    mimeType: 'image/jpeg'
+                }
             }
 
             const model = genAi.getGenerativeModel({ model: "gemini-1.5-flash" })
             const prompt = `What's picture is this? 
             send response with json like bellow 
             {
-                "information": {picture_information}
+                "information": "{picture_information}"
             }
             `
 
             return model.generateContent([prompt, data])
-                .then(result => result.response)
-                .then(response => response.text())
-                .then(text => resolve(text))
+                .then(result => result.response.text())
+                .then(result => resolve(JSON.parse(result)))
                 .catch(err => reject(err))
         }
     })
