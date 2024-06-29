@@ -15,7 +15,7 @@ app.listen(5000, () => {
     console.log('Server running on localhost:5000')
 })
 
-app.use(router)
+app.use(router) 
 
 app.get('/', (req, res) => {
     res.render('index.ejs')
