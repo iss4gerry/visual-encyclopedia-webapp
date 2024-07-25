@@ -5,7 +5,7 @@ const router = require('./routes/index')
 
 const publicPath = path.join(__dirname, 'public')
 app.use(express.static(publicPath))
-app.set('view engine', 'ejs')
+app.set('view engine', 'ejs') 
 app.set('views', path.join(__dirname, 'views'))
 
 app.use(express.urlencoded({ limit:'10mb', extended: true }))
