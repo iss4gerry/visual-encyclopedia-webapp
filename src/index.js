@@ -8,7 +8,7 @@ const port = 3000
 app.use(express.static(publicPath))
 app.set('view engine', 'ejs') 
 app.set('views', path.join(__dirname, 'views'))
-
+ 
 app.use(express.urlencoded({ limit:'10mb', extended: true }))
 app.use(express.json({ limit:'10mb' }))
 
