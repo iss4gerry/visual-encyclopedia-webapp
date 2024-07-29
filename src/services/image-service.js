@@ -22,7 +22,6 @@ const imageTracker = (image) => {
                 "information": "{picture_information}"
             }
             `
-
             return model.generateContent([prompt, data])
                 .then(result => result.response.text())
                 .then(result => resolve(JSON.parse(result)))
