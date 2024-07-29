@@ -2,7 +2,6 @@ const { GoogleGenerativeAI } = require('@google/generative-ai')
 const apiKey = 'AIzaSyBW6z7thdF4KjMOyO4NU8DiRrk-fbP__Rg'
 const genAi = new GoogleGenerativeAI(apiKey)
 
-
 const imageTracker = (image) => {
     return new Promise((resolve, reject) => {
         if(!image) {
