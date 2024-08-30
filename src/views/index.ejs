@@ -39,6 +39,16 @@
                 width: 100%;
                 padding: 10px;
             }
+
+            .footer .row p {
+                margin-bottom: 10px;
+            }
+
+            .darkSwitch {
+            margin-left: 50px;
+            }
+
+
         }
     </style>
     <link
@@ -56,7 +66,16 @@
         <div class="paper container">
 
             <navbar></navbar>
-            <h1 class="title text-center margin-top animate__animated animate__swing">Visual Encyclopedia</h1>
+            <fieldset class="row flex-right form-group">
+                <label for="paperSwitch7" class="paper-switch-label">
+                  Dark Mode
+                </label>
+                <label class="paper-switch">
+                  <input id="paperSwitch7" name="paperSwitch7" type="checkbox" v-model="darkMode"/>
+                  <span class="paper-switch-slider round"></span>
+                </label>
+              </fieldset>
+            <h1 class="title text-center margin-top animate__animated animate__swing" :class="">Visual Encyclopedia</h1>
             <form-section @information-result="changeInformationResult" @loading-status="changeLoadingStatus" @show-result="changeResultStatus"></form-section>
             <img style="width: 300px;margin: auto;"
                 class="no-border animate__animated animate__bounce" 
@@ -66,11 +85,9 @@
             <result-section :information="information" :history="history" v-if="showResult" class="animate__animated animate__fadeInUp"></result-sectio>
         </div>    
         <div class="footer paper container margin-top padding-none">
-            <div id="footer" class="row flex-center animate__animated animate__swing">
-                <p class="margin-top">
-                    Made With ❤️ by <a href="https://github.com/iss4gerry" target="_blank">Gerry</a>
-                </p>
-            </div>
+            <p class="text-center">
+                Made With ❤️ by <a href="https://github.com/iss4gerry" target="_blank">Gerry</a>
+            </p>
         </div>
     </div>
 
@@ -99,6 +116,13 @@
                 alt="Image Preview" 
                 style="width: auto; height: 300px; object-fit: cover;">
             </div>
+            <div class="form-group">
+            <label for="paperSelects1">Choose Language</label>
+            <select v-model="selectedLanguage" id="paperSelects1">
+                <option value="bahasa inggris">English</option>
+                <option value="bahasa indonesia">Indonesian</option>
+            </select>
+            </div>
             <button @click.stop="analyzeImage" href="resultSection">Analyze</button>
             </form>
     </div>
@@ -110,7 +134,8 @@
                     information: null,
                     history: null,
                     loading: false,
-                    showResult: false
+                    showResult: false,
+                    selectedLanguage: 'bahasa inggris'
                 }
             },
             methods: {
@@ -140,7 +165,8 @@
                     this.loading = true
                     this.$emit('loading-status', this.loading)
                     const data = {
-                        base64Image: imageBase64
+                        base64Image: imageBase64,
+                        language: this.selectedLanguage
                     }
                     const response = await fetch('/analyze', {
                         method: 'POST',
@@ -163,7 +189,7 @@
                     this.$emit('information-result', this.information, this.history)
                     this.$emit('show-result', this.showResult = true)
                 },
-            }
+            },
         }
     )
 
@@ -201,6 +227,7 @@
                 loading:false,
                 showResult: false,
                 errorStatus:false,
+                darkMode:false,
                 imgSrc: 'https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExZ3Y4aHNhNWl1YTFibHY1N254a2JoNmQzbmtqNTB0aHMyOHNzcG00bSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/ibWGYUw1hF4Q8gMOhi/giphy.webp'
             },
             methods: {
@@ -220,6 +247,15 @@
                 },
                 changeResultStatus(status) {
                     this.showResult = status
+                }
+            },
+            watch: {
+                darkMode(newValue) {
+                    if(newValue) {
+                        document.documentElement.classList.add('dark');
+                    }else{
+                        document.documentElement.classList.remove('dark');
+                    }
                 }
             }
         })
