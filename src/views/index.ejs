@@ -61,7 +61,7 @@
     />
     <title>VueJS Basic</title>
   </head>
-  <body> 
+  <body class="animate__animated "> 
     <div id="app">
         <div class="paper container">
 
@@ -104,13 +104,13 @@
 
         Vue.component('form-section', {
             template: `
-            <div class="paper container-lg col animate__animated animate__swing">
+            <div class="paper container-lg col animate__animated animate__flipInX">
             <h2 id="uploadImg" class="upload margin-small">upload an image</h2>
             <form enctype="multipart/form-data">
             <div class="form-group">
                 <input type="file" accept="image/*" @change="onFileChange">
             </div>
-            <div id="imagePreviewContainer" class="margin-bottom" v-if="imageFile">
+            <div id="imagePreviewContainer" class="margin-bottom animate__animated animate__flipInX" v-if="imageFile">
                 <img id="imagePreview" 
                 :src="imageUrl" 
                 alt="Image Preview" 
@@ -252,8 +252,12 @@
             watch: {
                 darkMode(newValue) {
                     if(newValue) {
+                        document.body.classList.add('animate__fadeIn')
+                        document.body.classList.remove('animate__bounceIn')
                         document.documentElement.classList.add('dark');
                     }else{
+                        document.body.classList.add('animate__bounceIn')
+                        document.body.classList.remove('animate__fadeIn')
                         document.documentElement.classList.remove('dark');
                     }
                 }
