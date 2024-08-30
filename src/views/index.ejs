@@ -56,16 +56,17 @@
         <div class="paper container">
 
             <navbar></navbar>
-            <h1 class="title text-center margin-top">Visual Encyclopedia</h1>
+            <h1 class="title text-center margin-top animate__animated animate__swing">Visual Encyclopedia</h1>
             <form-section @information-result="changeInformationResult" @loading-status="changeLoadingStatus" @show-result="changeResultStatus"></form-section>
             <img style="width: 300px;margin: auto;"
                 class="no-border animate__animated animate__bounce" 
-                src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExZ3Y4aHNhNWl1YTFibHY1N254a2JoNmQzbmtqNTB0aHMyOHNzcG00bSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/ibWGYUw1hF4Q8gMOhi/giphy.webp"
+                :src=imgSrc
                 v-if="loading">
+                <h3 class="text-center animate__animated animate__bounce animate__repeat-3" v-if="errorStatus">Error, please try again!</h3>
             <result-section :information="information" :history="history" v-if="showResult" class="animate__animated animate__fadeInUp"></result-sectio>
-            </div>    
+        </div>    
         <div class="footer paper container margin-top padding-none">
-            <div id="footer" class="row flex-center">
+            <div id="footer" class="row flex-center animate__animated animate__swing">
                 <p class="margin-top">
                     Made With ❤️ by <a href="https://github.com/iss4gerry" target="_blank">Gerry</a>
                 </p>
@@ -86,7 +87,7 @@
 
         Vue.component('form-section', {
             template: `
-            <div class="paper container-lg col">
+            <div class="paper container-lg col animate__animated animate__swing">
             <h2 id="uploadImg" class="upload margin-small">upload an image</h2>
             <form enctype="multipart/form-data">
             <div class="form-group">
@@ -150,6 +151,10 @@
                     })
 
                     const responseData = await response.json()
+                    if(responseData.message.includes('Error')){
+                        this.$emit('loading-status', 'error')
+                        return
+                    }
                     const result = responseData.data
                     this.information = result.information
                     this.loading = false
@@ -194,7 +199,9 @@
                 information: '',
                 history: '',
                 loading:false,
-                showResult: false
+                showResult: false,
+                errorStatus:false,
+                imgSrc: 'https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExZ3Y4aHNhNWl1YTFibHY1N254a2JoNmQzbmtqNTB0aHMyOHNzcG00bSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/ibWGYUw1hF4Q8gMOhi/giphy.webp'
             },
             methods: {
                 changeInformationResult(information, history) {
@@ -202,6 +209,13 @@
                     this.history = history
                 },
                 changeLoadingStatus(status) {
+                    if(status === 'error'){
+                        this.imgSrc = ''
+                        this.errorStatus = true
+                        return 
+                    }
+                    this.errorStatus = false
+                    this.imgSrc = 'https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExZ3Y4aHNhNWl1YTFibHY1N254a2JoNmQzbmtqNTB0aHMyOHNzcG00bSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/ibWGYUw1hF4Q8gMOhi/giphy.webp'
                     this.loading = status
                 },
                 changeResultStatus(status) {
