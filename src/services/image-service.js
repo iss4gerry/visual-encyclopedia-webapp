@@ -16,9 +16,10 @@ const imageTracker = (image) => {
 
             const model = genAi.getGenerativeModel({ model: "gemini-1.5-flash" })
             const prompt = `What's picture is this?  
-            send response with string like bellow. your entire response/output is going to consist of a single string object {}, and you will NOT wrap it within JSON md markers
+            send response with string like bellow . your entire response/output is going to consist of a single string object {}, and you will NOT wrap it within JSON md markers
             {
-                "information": "{picture_information}"
+                "information": "{picture_information_please send as long as possible}",
+                "history": "{picture_history_please send as long as possible}"
             }
             `
             return model.generateContent([prompt, data])

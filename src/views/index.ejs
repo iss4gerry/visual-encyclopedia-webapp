@@ -14,7 +14,7 @@
         <body class="paper container">
             <h1 class="text-center margin-top">Visual Encyclopedia</h1>
             <form-section @information-result="changeInformationResult"></form-section>
-            <result-section :information="information" ></result-section>
+            <result-section :information="information" :history="history"></result-section>
         </body>    
     </div>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
@@ -40,7 +40,8 @@
                 return {
                     imageFile: null,
                     imageUrl: null,
-                    information: null
+                    information: null,
+                    history: null
                 }
             },
             methods: {
@@ -79,14 +80,15 @@
                     const responseData = await response.json()
                     const result = responseData.data
                     this.information = result.information
-                    this.$emit('information-result', this.information)
+                    this.history = result.history
+                    this.$emit('information-result', this.information, this.history)
                 }
             }
         }
     )
 
         Vue.component('result-section', {
-            props: ['information'],
+            props: ['information', 'history'],
             template: `
             <div class="paper col">
             <h2 class="text-center margin-small">Result</h2>
@@ -98,12 +100,12 @@
                 <label for="tab2">History</label>
                 <div class="content" id="content1">
                 <p>
-                Information
+                    {{ information }}
                 </p>
             </div>
             <div class="content" id="content2">
                 <p>
-                History
+                    {{ history }}
                 </p>
             </div>
             </div>
@@ -114,11 +116,13 @@
         var app = new Vue({
             el:'#app',
             data: {
-                information: ''
+                information: '',
+                history: ''
             },
             methods: {
-                changeInformationResult(data) {
-                    this.information = data
+                changeInformationResult(information, history) {
+                    this.information = information
+                    this.history = history
                 }
             }
         })
