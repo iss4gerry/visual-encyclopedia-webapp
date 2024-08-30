@@ -4,6 +4,45 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="css/style.css">
+    <style>
+
+        @media (min-width: 601px) {
+            #imagePreview {
+                width: auto;
+                height: 300px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .paper {
+                padding: 10px;
+            }
+
+            .paper h1 {
+                font-size: 50px;
+            }
+
+            .paper h2 {
+                font-size: 40px;
+            }
+
+            input[type="file"] {
+                width: 100%;
+                height: auto;
+                font-size: 20px;
+            }
+
+            #imagePreview {
+                width: 100%;
+                height: auto;
+            }
+
+            button {
+                width: 100%;
+                padding: 10px;
+            }
+        }
+    </style>
     <link
     rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
@@ -16,19 +55,27 @@
   </head>
   <body> 
     <div id="app">
-        <body class="paper container">
+        <div class="paper container">
 
             <navbar></navbar>
-            <h1 class="text-center margin-top">Visual Encyclopedia</h1>
+            <h1 class="title text-center margin-top">Visual Encyclopedia</h1>
             <form-section @information-result="changeInformationResult" @loading-status="changeLoadingStatus" @show-result="changeResultStatus"></form-section>
             <img style="width: 300px;margin: auto;"
                 class="no-border animate__animated animate__bounce" 
                 src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExZ3Y4aHNhNWl1YTFibHY1N254a2JoNmQzbmtqNTB0aHMyOHNzcG00bSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/ibWGYUw1hF4Q8gMOhi/giphy.webp"
                 v-if="loading">
             <result-section :information="information" :history="history" v-if="showResult" class="animate__animated animate__fadeInUp"></result-sectio>
-            <div id="spacer" style="height: 0; transition: height 0.5s;"></div>
-        </body>    
+            </div>    
+        <div class="paper container margin-top padding-none">
+            <div class="row flex-center">
+                <p class="margin-top">
+                    Made With ❤️ by <a href="https://github.com/iss4gerry" target="_blank">Gerry</a>
+                </p>
+            </div>
+        </div>
     </div>
+
+    
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     
     <script>
@@ -41,8 +88,8 @@
 
         Vue.component('form-section', {
             template: `
-            <div class="paper col">
-            <h2 id="uploadImg" class="margin-small">upload an image</h2>
+            <div class="paper container-lg col">
+            <h2 id="uploadImg" class="upload margin-small">upload an image</h2>
             <form enctype="multipart/form-data">
             <div class="form-group">
                 <input type="file" accept="image/*" @change="onFileChange">
