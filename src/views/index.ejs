@@ -14,7 +14,7 @@
         <body class="paper container">
             <h1 class="text-center margin-top">Visual Encyclopedia</h1>
             <form-section @information-result="changeInformationResult"></form-section>
-            <result-section :information="information" :history="history"></result-section>
+            <result-section :information="information" :history="history" v-if="information"></result-section>
         </body>    
     </div>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
@@ -29,8 +29,11 @@
             <div class="form-group">
                 <input type="file" accept="image/*" @change="onFileChange">
             </div>
-            <div id="imagePreviewContainer" class="form-group" v-if="imageFile">
-                <img id="imagePreview" class="preview-image" :src="imageUrl" alt="Image Preview">
+            <div id="imagePreviewContainer" class="margin-bottom" v-if="imageFile">
+                <img id="imagePreview" 
+                :src="imageUrl" 
+                alt="Image Preview" 
+                style="width: auto; height: 300px; object-fit: cover;">
             </div>
             <button @click.stop="analyzeImage">Analyze</button>
             </form>
