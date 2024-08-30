@@ -3,6 +3,11 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="css/style.css">
+    <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
     <link
       rel="stylesheet"
       href="https://unpkg.com/papercss@1.9.2/dist/paper.min.css"
@@ -12,14 +17,27 @@
   <body> 
     <div id="app">
         <body class="paper container">
+
+            <navbar></navbar>
             <h1 class="text-center margin-top">Visual Encyclopedia</h1>
-            <form-section @information-result="changeInformationResult"></form-section>
-            <result-section :information="information" :history="history" v-if="information"></result-section>
+            <form-section @information-result="changeInformationResult" @loading-status="changeLoadingStatus" @show-result="changeResultStatus"></form-section>
+            <img style="width: 300px;margin: auto;"
+                class="no-border animate__animated animate__bounce" 
+                src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExZ3Y4aHNhNWl1YTFibHY1N254a2JoNmQzbmtqNTB0aHMyOHNzcG00bSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/ibWGYUw1hF4Q8gMOhi/giphy.webp"
+                v-if="loading">
+            <result-section :information="information" :history="history" v-if="showResult" class="animate__animated animate__fadeInUp"></result-sectio>
+            <div id="spacer" style="height: 0; transition: height 0.5s;"></div>
         </body>    
     </div>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     
     <script>
+
+        Vue.component('navbar', {
+            template: `
+                
+            `
+        })
 
         Vue.component('form-section', {
             template: `
@@ -35,7 +53,7 @@
                 alt="Image Preview" 
                 style="width: auto; height: 300px; object-fit: cover;">
             </div>
-            <button @click.stop="analyzeImage">Analyze</button>
+            <button @click.stop="analyzeImage" href="resultSection">Analyze</button>
             </form>
     </div>
             `,
@@ -44,7 +62,9 @@
                     imageFile: null,
                     imageUrl: null,
                     information: null,
-                    history: null
+                    history: null,
+                    loading: false,
+                    showResult: false
                 }
             },
             methods: {
@@ -68,7 +88,11 @@
                 },
                 async analyzeImage(event) {
                     event.preventDefault()
+                    this.$emit('show-result', this.showResult = false)
                     const imageBase64 = await this.fileToBase64(this.imageFile) 
+                    if(!imageBase64) return
+                    this.loading = true
+                    this.$emit('loading-status', this.loading)
                     const data = {
                         base64Image: imageBase64
                     }
@@ -83,9 +107,12 @@
                     const responseData = await response.json()
                     const result = responseData.data
                     this.information = result.information
+                    this.loading = false
+                    this.$emit('loading-status', this.loading)
                     this.history = result.history
                     this.$emit('information-result', this.information, this.history)
-                }
+                    this.$emit('show-result', this.showResult = true)
+                },
             }
         }
     )
@@ -120,12 +147,20 @@
             el:'#app',
             data: {
                 information: '',
-                history: ''
+                history: '',
+                loading:false,
+                showResult: false
             },
             methods: {
                 changeInformationResult(information, history) {
                     this.information = information
                     this.history = history
+                },
+                changeLoadingStatus(status) {
+                    this.loading = status
+                },
+                changeResultStatus(status) {
+                    this.showResult = status
                 }
             }
         })
