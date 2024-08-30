@@ -1,55 +1,127 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Visual Encyclopedia</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="https://unpkg.com/papercss@1.9.2/dist/paper.min.css">
-    <style>
-
-    </style>
-</head>
-<body class="container">
-    <h1 id="title">visual encyclopedia</h1>
-    <div class="paper">
-        <h2 id="uploadImg">upload an image</h2>
-        <form id="uploadForm" enctype="multipart/form-data">
-            <div class="form-group">
-                <input type="file" id="imageUpload" name="imageUpload" accept="image/*" onchange="previewImage(event)">
-            </div>
-            <div id="imagePreviewContainer" class="form-group">
-                <img id="imagePreview" class="preview-image" src="#" alt="Image Preview">
-            </div>
-            <button type="submit">Analyze</button>
-        </form>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/papercss@1.9.2/dist/paper.min.css"
+    />
+    <title>VueJS Basic</title>
+  </head>
+  <body> 
+    <div id="app">
+        <body class="paper container">
+            <h1 class="text-center margin-top">Visual Encyclopedia</h1>
+            <form-section @information-result="changeInformationResult"></form-section>
+            <result-section :information="information" ></result-section>
+        </body>    
     </div>
-    <div class="paper">
-        <article class="article">
-        <h3 id="title2">information</h1>
-        <p class="response-paragraph" id="information"></p>
-        </article>
-    </div>
-
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    
     <script>
-        function previewImage(event) {
-            var input = event.target;
-            var imagePreview = document.getElementById('imagePreview');
-            var imagePreviewContainer = document.getElementById('imagePreviewContainer');
 
-            if (input.files && input.files[0]) {
-                var reader = new FileReader();
+        Vue.component('form-section', {
+            template: `
+            <div class="paper col">
+            <h2 id="uploadImg" class="margin-small">upload an image</h2>
+            <form enctype="multipart/form-data">
+            <div class="form-group">
+                <input type="file" accept="image/*" @change="onFileChange">
+            </div>
+            <div id="imagePreviewContainer" class="form-group" v-if="imageFile">
+                <img id="imagePreview" class="preview-image" :src="imageUrl" alt="Image Preview">
+            </div>
+            <button @click.stop="analyzeImage">Analyze</button>
+            </form>
+    </div>
+            `,
+            data: function () {
+                return {
+                    imageFile: null,
+                    imageUrl: null,
+                    information: null
+                }
+            },
+            methods: {
+                onFileChange(e) {
+                    const file = e.target.files[0]
+                    if(file) {
+                        this.imageFile = file
+                        this.imageUrl = URL.createObjectURL(file)
+                    }else {
+                        this.imageFile = null
+                        this.imageUrl = null
+                    }
+                },
+                fileToBase64(file) {
+                    return new Promise((resolve, reject) => {
+                    const reader = new FileReader()
+                    reader.onloadend = () => resolve(reader.result.split(',')[1])
+                    reader.onerror = reject
+                    reader.readAsDataURL(file)
+                })
+                },
+                async analyzeImage(event) {
+                    event.preventDefault()
+                    const imageBase64 = await this.fileToBase64(this.imageFile) 
+                    const data = {
+                        base64Image: imageBase64
+                    }
+                    const response = await fetch('/analyze', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(data) 
+                    })
 
-                reader.onload = function(e) {
-                    imagePreview.src = e.target.result;
-                    imagePreview.style.display = 'block'; // Tampilkan preview gambar
-                };
-
-                reader.readAsDataURL(input.files[0]);
+                    const responseData = await response.json()
+                    const result = responseData.data
+                    this.information = result.information
+                    this.$emit('information-result', this.information)
+                }
             }
         }
+    )
 
+        Vue.component('result-section', {
+            props: ['information'],
+            template: `
+            <div class="paper col">
+            <h2 class="text-center margin-small">Result</h2>
+            <div class="row flex-spaces tabs">
+                <input id="tab1" type="radio" name="tabs" checked>
+                <label for="tab1">Information</label>
+
+                <input id="tab2" type="radio" name="tabs">
+                <label for="tab2">History</label>
+                <div class="content" id="content1">
+                <p>
+                Information
+                </p>
+            </div>
+            <div class="content" id="content2">
+                <p>
+                History
+                </p>
+            </div>
+            </div>
+            </div>
+            `,
+        })
+
+        var app = new Vue({
+            el:'#app',
+            data: {
+                information: ''
+            },
+            methods: {
+                changeInformationResult(data) {
+                    this.information = data
+                }
+            }
+        })
     </script>
-    <script src="/js/script.js"></script>
-</body>
+  </body>
 </html>
