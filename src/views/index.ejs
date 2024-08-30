@@ -84,7 +84,7 @@
                 <h3 class="text-center animate__animated animate__bounce animate__repeat-3" v-if="errorStatus">Error, please try again!</h3>
             <result-section :information="information" :history="history" v-if="showResult" class="animate__animated animate__fadeInUp"></result-sectio>
         </div>    
-        <div class="footer paper container margin-top padding-none">
+        <div class="footer paper container margin-top padding-none margin-bottom">
             <p class="text-center animate__animated animate__swing">
                 Made With ❤️ by <a href="https://github.com/iss4gerry" target="_blank">Gerry</a>
             </p>
@@ -123,7 +123,7 @@
                 <option value="bahasa indonesia">Indonesian</option>
             </select>
             </div>
-            <button @click.stop="analyzeImage" href="resultSection">Analyze</button>
+            <button @click.stop="analyzeImage" href="footer">Analyze</button>
             </form>
     </div>
             `,
