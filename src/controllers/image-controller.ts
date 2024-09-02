@@ -1,11 +1,7 @@
 import { Request, Response } from "express"
 import httpStatus from "http-status"
+import { UserRequest } from "../models/image-model"
 import imageService from "../services/image-service"
-
-export interface UserRequest {
-    base64Image: string
-    language: string
-}
 
 const imageTracker = async (req: Request, res: Response) => {
     try {

@@ -1,12 +1,8 @@
 require('dotenv').config()
 import { GoogleGenerativeAI } from '@google/generative-ai'
+import { ImageTrackerResult } from '../models/image-model'
 const apiKey: string = process.env.GEMINI_KEY!
 const genAi = new GoogleGenerativeAI(apiKey)
-
-export interface ImageTrackerResult {
-    information: string
-    history: string
-}
 
 // const imageTracker = async (image: any, language: string): Promise<ImageTrackerResult> => {
 

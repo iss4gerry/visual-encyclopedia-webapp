@@ -81,7 +81,7 @@
                 class="no-border animate__animated animate__bounce" 
                 :src=imgSrc
                 v-if="loading">
-                <h3 class="text-center animate__animated animate__bounce animate__repeat-3" v-if="errorStatus">Error, please try again!</h3>
+                <h3 class="text-center animate__animated animate__bounce animate__repeat-3" v-if="errorStatus">Server error, please try again!</h3>
             <result-section :information="information" :history="history" v-if="showResult" class="animate__animated animate__fadeInUp"></result-sectio>
         </div>    
         <div class="footer paper container margin-top padding-none margin-bottom">
