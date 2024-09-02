@@ -1,10 +1,11 @@
-const express = require('express')
-const app = express()
-const path = require('path')
-const router = require('./routes/index')
+import express from 'express'
+import { Request, Response } from 'express'
+import path from 'path'
+import router from './routes/index'
 
+const app = express()
 const publicPath = path.join(__dirname, 'public')
-const port = 3000
+const port: number = 3000
 app.use(express.static(publicPath))
 app.set('view engine', 'ejs') 
 app.set('views', path.join(__dirname, 'views'))
@@ -18,6 +19,6 @@ app.listen(port, () => {
 
 app.use(router)
 
-app.get('/', (req, res) => {
+app.get('/', (req: Request, res: Response) => {
     res.render('index.ejs')
 })
